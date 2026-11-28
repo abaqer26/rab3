@@ -435,6 +435,8 @@ input[type=text]:focus{outline:none;border-color:var(--a-fill);box-shadow:0 0 14
 @keyframes gl{0%{transform:translate(0,0) skewX(0)}25%{transform:translate(-9px,3px) skewX(6deg)}50%{transform:translate(8px,-4px) skewX(-8deg);filter:hue-rotate(90deg)}75%{transform:translate(-4px,2px) skewX(3deg)}100%{transform:none}}
 @media (prefers-reduced-motion:reduce){#cardrev.glitch .in{animation:none}}
 .okref{font-family:var(--head);font-weight:700;font-size:clamp(26px,4vw,40px);color:var(--accent);text-shadow:0 0 22px var(--glow);padding:18px 0 4px}
+.qsub{text-align:center;color:var(--muted);font-size:clamp(14px,1.6vw,18px);margin:-8px 0 14px}
+.qtitle{font-size:clamp(26px,4.4vw,48px)}
 /* البطاقات السرية */
 .scards{margin:0 0 14px;text-align:center}
 .sc-h{font-family:var(--head);font-weight:700;font-size:20px;margin-bottom:8px}
@@ -465,7 +467,7 @@ input[type=text]:focus{outline:none;border-color:var(--a-fill);box-shadow:0 0 14
 <body>
 <div class="wrap" id="app"></div>
 
-<script src="bank.js?v=c3c7d3af"></script>
+<script src="bank.js?v=baef969f"></script>
 <script>
 // بنك الأسئلة (BANK و US و UK) انتقل إلى ملف bank.js
 
@@ -853,6 +855,7 @@ function viewQuestion(){
       <button class="btn ghost sm" data-act="quit">إنهاء الجولة</button>
     </div>
     <div class="qtitle">${esc(L.t)}</div>
+    ${L.sub ? `<div class="qsub">${esc(L.sub)}</div>` : ""}
     <div class="top">
       ${teamBox(0, live, bad)}
       <div class="timer" id="timer"><span class="muted">الوقت</span><b></b><i class="tbar"><i style="width:${pct(left)}"></i></i></div>
@@ -1424,7 +1427,7 @@ function publish(){
       tiles:S.order.map((o, j) => o.c === id ? { i:j, by:S.done[j] } : null).filter(Boolean) })) });
   if(S.screen === "question"){
     const L = curList(), q = S.q;
-    Object.assign(st, { qi:S.qi, total:S.order.length, progress:progress(), title:L.t, cd:q.cd ? `«${CD(q.cd.id).n}» على ${S.names[q.cd.team]}: ${CD(q.cd.id).d}` : "", nolife:!!(q.cd && q.cd.id === 16 && q.cd.team === q.turn), turn:q.turn, over:q.over, risk:q.risk, paused:!!q.paused, fresh:!!q.fresh,
+    Object.assign(st, { qi:S.qi, total:S.order.length, progress:progress(), title:L.t, sub:L.sub || "", cd:q.cd ? `«${CD(q.cd.id).n}» على ${S.names[q.cd.team]}: ${CD(q.cd.id).d}` : "", nolife:!!(q.cd && q.cd.id === 16 && q.cd.team === q.turn), turn:q.turn, over:q.over, risk:q.risk, paused:!!q.paused, fresh:!!q.fresh,
       trap: q.risk ? PASS_RISK : hasTraps(L) || L.open ? 0 : (TRAPS[q.wrong] || 0),
       traps: hasTraps(L) ? L.x.map((x, i) => ({ n:ansName(x), p:TRAPS[i] || 0, hit:!!(q.traps && q.traps[i]) })) : [],
       life: { hint:HINTS - S.used[q.turn].hint, pass:!S.used[q.turn].pass && !q.risk, dbl:!S.used[q.turn].dbl, dblOn:q.dbl, solo:!!S.solo, team:!!S.solo && !S.used[q.turn].team, amb:!S.used[q.turn].amb, ambOn:!!q.amb },
@@ -1599,6 +1602,7 @@ function refApp(){
       <div class="muted" style="text-align:center;margin-top:8px">${esc(st.progress || "")}</div>
       ${st.cd ? `<div class="rcat" style="margin-top:8px;font-size:14px">🃏 ${esc(st.cd)}</div>` : ""}
       <div class="qtitle" style="margin-bottom:0">${esc(st.title)}</div>
+      ${st.sub ? `<div class="qsub">${esc(st.sub)}</div>` : ""}
       <div class="who" style="color:${st.over ? "var(--muted)" : col(st.turn)}">${st.over ? "انتهى السؤال" : "الدور: " + esc(st.names[st.turn])}</div>
       <div class="slots" style="grid-template-columns:1fr">
         ${(st.open ? st.answers.filter(a => a.by != null) : st.answers).map((a, i) => a.by != null
